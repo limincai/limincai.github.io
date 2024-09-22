@@ -275,21 +275,17 @@
 &lt;/div&gt;&lt;h2 id=&#34;图片插入&#34;&gt;图片插入
 &lt;/h2&gt;&lt;p&gt;html 写法
 &lt;code&gt;&amp;lt;img src=&amp;quot;图片路径&amp;quot; width=200 heigth=200&amp;gt;&lt;/code&gt;&lt;/p&gt;
-&lt;img src=&#34;markdownsyntax-corver.png&#34; width=200 heigth=200&gt;
+&lt;img src=&#34;https://limincai.github.io/Users/limincai/code/hugo-blog/content/post/markdown-syntax/markdownsyntax-corver.png&#34; width=200 heigth=200&gt;
 &lt;p&gt;markdown 写法，这种写法无法主动修改图片尺寸。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;![图片描述](图片地址 &amp;quot;图片名称，可选&amp;quot;)&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://limincai.github.io/p/markdown-%E8%AF%AD%E6%B3%95/markdownsyntax-corver.png&#34;
-	width=&#34;3840&#34;
-	height=&#34;2160&#34;
-	srcset=&#34;https://limincai.github.io/p/markdown-%E8%AF%AD%E6%B3%95/markdownsyntax-corver_hu17629235347701023730.png 480w, https://limincai.github.io/p/markdown-%E8%AF%AD%E6%B3%95/markdownsyntax-corver_hu18281628749820398261.png 1024w&#34;
+&lt;p&gt;&lt;img src=&#34;https://limincai.github.io/Users/limincai/code/hugo-blog/content/post/markdown-syntax/markdownsyntax-corver.png&#34;
+	
+	
+	
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;StarWars&#34;
 	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;177&#34;
-		data-flex-basis=&#34;426px&#34;
 	
 &gt;&lt;/p&gt;
 &lt;h2 id=&#34;链接&#34;&gt;链接
@@ -621,13 +617,90 @@ $$&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h3 id=&#34;分数&#34;&gt;分数
-&lt;/h3&gt;&lt;p&gt;分数使用&lt;code&gt;\farc&lt;/code&gt;来表示。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;$ \frac{分子}{分母} $&lt;/code&gt;&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;$ \frac{分子}{分母} $&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;$ \frac{分子}{分母} $&lt;/p&gt;
 &lt;h3 id=&#34;开方&#34;&gt;开方
-&lt;/h3&gt;&lt;p&gt;开方使用&lt;code&gt;\sqrt&lt;/code&gt;来表示。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;$\sqrt{4}$&lt;/code&gt;&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;$\sqrt{4}$&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;$\sqrt{4}$&lt;/p&gt;
 &lt;p&gt;如果需要修改根号上方数值，可以添加中括号。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$\sqrt[3]{8}$&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;$\sqrt[3]{8}$&lt;/p&gt;
+&lt;h3 id=&#34;上下标&#34;&gt;上下标
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;^&lt;/code&gt; 表示上标，&lt;code&gt;_&lt;/code&gt;表示下标。&lt;/p&gt;
+&lt;p&gt;$ x*_下标 $&lt;/p&gt;
+&lt;p&gt;$ x^上标 $&lt;/p&gt;
+&lt;p&gt;$ x^上标_*下标 $&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ x_下标 $
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ x^上标 $
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ x^上标_下标 $
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果上标或下标内容多于一个字符，需要使用 {} 括起来，包括后续的其他代码如果出现只有一个字符生效的情况下，考虑使用花括号囊括全部内容：&lt;/p&gt;
+&lt;p&gt;$ x*_{下标} $&lt;/p&gt;
+&lt;p&gt;$ x^{上标} $&lt;/p&gt;
+&lt;p&gt;$ x^{上标}_*{下标} $&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ x_{下标} $
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ x^{上标} $
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ x^{上标}_{下标} $
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;积分&#34;&gt;积分
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;$\int_积分下限^积分上限xdx $*&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;$\int_1^2xdx $*&lt;/p&gt;
+&lt;h3 id=&#34;极限&#34;&gt;极限
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;$ \lim_{n\rightarrow+\infty}\frac{1}{n + 1} $*&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;$ \lim_{n\rightarrow+\infty}\frac{1}{n + 1} $*&lt;/p&gt;
+&lt;h3 id=&#34;其他符号&#34;&gt;其他符号
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;代码&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;符号&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;描述&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;$ \vec{a} $&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;$ \vec{a} $&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;向量符号&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;$ \cdots $&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;$ \cdots $&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;居中省略号&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;$ \ldots $&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;$ \ldots $&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;靠底部的省略号&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;$ \cdot $&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;$ \cdot $&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;点乘号&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;$ \sum*_1^n $*&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;$ \sum_1^n $*&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;累加&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 &lt;h2 id=&#34;html-标签&#34;&gt;html 标签
 &lt;/h2&gt;&lt;p&gt;markdown 支持 html 标签，可以更加个性化的自定义内容。&lt;/p&gt;
 &lt;p&gt;例如：&lt;/p&gt;
@@ -643,6 +716,7 @@ $$&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;iframe src=&#34;https://limincai.github.io/&#34; height=&#34;1080&#34; 
 width=&#34;1080&#34; sandbox=&#34;allow-scripts&#34; scrolling=&#34;yes&#34;&gt;&lt;/iframe```
+&lt;p&gt;ai.github.io/&amp;quot; allow-top-navigation=&amp;ldquo;false&amp;rdquo; allow-forms=&amp;ldquo;false&amp;rdquo; allowfullscreen=&amp;ldquo;true&amp;rdquo; allow-popups=&amp;ldquo;false&amp;rdquo; sandbox=&amp;ldquo;allow-scripts allow-same-origin allow-popups&amp;rdquo; style=&amp;ldquo;box-sizing: border-box; &amp;ndash;tw-border-spacing-x: 0; &amp;ndash;tw-border-spacing-y: 0; &amp;ndash;tw-translate-x: 0; &amp;ndash;tw-translate-y: 0; &amp;ndash;tw-rotate: 0; &amp;ndash;tw-skew-x: 0; &amp;ndash;tw-skew-y: 0; &amp;ndash;tw-scale-x: 1; &amp;ndash;tw-scale-y: 1; &amp;ndash;tw-pan-x: ; &amp;ndash;tw-pan-y: ; &amp;ndash;tw-pinch-zoom: ; &amp;ndash;tw-scroll-snap-strictness: proximity; &amp;ndash;tw-ordinal: ; &amp;ndash;tw-slashed-zero: ; &amp;ndash;tw-numeric-figure: ; &amp;ndash;tw-numeric-spacing: ; &amp;ndash;tw-numeric-fraction: ; &amp;ndash;tw-ring-inset: ; &amp;ndash;tw-ring-offset-width: 0px; &amp;ndash;tw-ring-offset-color: #fff; &amp;ndash;tw-ring-color: rgb(59 130 246 / 0.5); &amp;ndash;tw-ring-offset-shadow: 0 0 #0000; &amp;ndash;tw-ring-shadow: 0 0 #0000; &amp;ndash;tw-shadow: 0 0 #0000; &amp;ndash;tw-shadow-colored: 0 0 #0000; &amp;ndash;tw-blur: ; &amp;ndash;tw-brightness: ; &amp;ndash;tw-contrast: ; &amp;ndash;tw-grayscale: ; &amp;ndash;tw-hue-rotate: ; &amp;ndash;tw-invert: ; &amp;ndash;tw-saturate: ; &amp;ndash;tw-sepia: ; &amp;ndash;tw-drop-shadow: ; &amp;ndash;tw-backdrop-blur: ; &amp;ndash;tw-backdrop-brightness: ; &amp;ndash;tw-backdrop-contrast: ; &amp;ndash;tw-backdrop-grayscale: ; &amp;ndash;tw-backdrop-hue-rotate: ; &amp;ndash;tw-backdrop-invert: ; &amp;ndash;tw-backdrop-opacity: ; &amp;ndash;tw-backdrop-saturate: ; &amp;ndash;tw-backdrop-sepia: ; margin: 0px auto; max-width: 100%; width: 569px; border: medium;&amp;quot;&amp;gt;&lt;/iframe&gt;&lt;/p&gt;
 &lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
 &lt;hr&gt;
 &lt;ol&gt;
@@ -780,48 +854,6 @@ width=&#34;1080&#34; sandbox=&#34;allow-scripts&#34; scrolling=&#34;yes&#34;&gt;
 &lt;/h2&gt;&lt;p&gt;Victa caducifer, malo vulnere contra dicere aurato, ludit regale, voca! Retorsit colit est profanae esse virescere furit nec; iaculi matertera et visa est, viribus. Divesque creatis, tecta novat collumque vulnus est, parvas. &lt;strong&gt;Faces illo pepulere&lt;/strong&gt; tempus adest. Tendit flamma, ab opes virum sustinet, sidus sequendo urbis.&lt;/p&gt;
 &lt;p&gt;Iubar proles corpore raptos vero auctor imperium; sed et huic: manus caeli Lelegas tu lux. Verbis obstitit intus oblectamina fixis linguisque ausus sperare Echionides cornuaque tenent clausit possit. Omnia putatur. Praeteritae refert ausus; ferebant e primus lora nutat, vici quae mea ipse. Et iter nil spectatae vulnus haerentia iuste et exercebat, sui et.&lt;/p&gt;
 &lt;p&gt;Eurytus Hector, materna ipsumque ut Politen, nec, nate, ignari, vernum cohaesit sequitur. Vel &lt;strong&gt;mitis temploque&lt;/strong&gt; vocatus, inque alis, &lt;em&gt;oculos nomen&lt;/em&gt; non silvis corpore coniunx ne displicet illa. Crescunt non unus, vidit visa quantum inmiti flumina mortis facto sic: undique a alios vincula sunt iactata abdita! Suspenderat ego fuit tendit: luna, ante urbem Propoetides &lt;strong&gt;parte&lt;/strong&gt;.&lt;/p&gt;</description>
-        </item>
-        <item>
-        <title>Math Typesetting</title>
-        <link>https://limincai.github.io/p/math-typesetting/</link>
-        <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
-        
-        <guid>https://limincai.github.io/p/math-typesetting/</guid>
-        <description>&lt;p&gt;Mathematical notation in a Hugo project can be enabled by using third party JavaScript libraries.&lt;/p&gt;
-&lt;p&gt;In this example we will be using &lt;a class=&#34;link&#34; href=&#34;https://katex.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;KaTeX&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Create a partial under &lt;code&gt;/layouts/partials/math.html&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Within this partial reference the &lt;a class=&#34;link&#34; href=&#34;https://katex.org/docs/autorender.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Auto-render Extension&lt;/a&gt; or host these scripts locally.&lt;/li&gt;
-&lt;li&gt;Include the partial in your templates like so:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; or .Params.math .Site.Params.math &lt;span class=&#34;o&#34;&gt;}}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;{{&lt;/span&gt; partial &lt;span class=&#34;s2&#34;&gt;&amp;#34;math.html&amp;#34;&lt;/span&gt; . &lt;span class=&#34;o&#34;&gt;}}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;{{&lt;/span&gt; end &lt;span class=&#34;o&#34;&gt;}}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;To enable KaTeX globally set the parameter &lt;code&gt;math&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt; in a project&amp;rsquo;s configuration&lt;/li&gt;
-&lt;li&gt;To enable KaTeX on a per page basis include the parameter &lt;code&gt;math: true&lt;/code&gt; in content files&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Use the online reference of &lt;a class=&#34;link&#34; href=&#34;https://katex.org/docs/supported.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;Supported TeX Functions&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;examples&#34;&gt;Examples
-&lt;/h3&gt;&lt;p&gt;Inline math: $\varphi = \dfrac{1+\sqrt5}{2}= 1.6180339887…$&lt;/p&gt;
-&lt;p&gt;Block math:
-&lt;/p&gt;
-$$
- \varphi = 1+\frac{1} {1+\frac{1} {1+\frac{1} {1+\cdots} } } 
-$$</description>
         </item>
         <item>
         <title>Emoji Support</title>
