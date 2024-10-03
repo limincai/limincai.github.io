@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://limincai.github.io/</loc>
-    <lastmod>2024-09-22T20:11:03+08:00</lastmod>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
+  </url><url>
+    <loc>https://limincai.github.io/categories/</loc>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
+  </url><url>
+    <loc>https://limincai.github.io/post/</loc>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
+  </url><url>
+    <loc>https://limincai.github.io/tags/quick-start/</loc>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
+  </url><url>
+    <loc>https://limincai.github.io/tags/redis/</loc>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
+  </url><url>
+    <loc>https://limincai.github.io/categories/redis/</loc>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
+  </url><url>
+    <loc>https://limincai.github.io/p/redis-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
+  </url><url>
+    <loc>https://limincai.github.io/tags/</loc>
+    <lastmod>2024-09-25T18:11:03+08:00</lastmod>
   </url><url>
     <loc>https://limincai.github.io/tags/markdown/</loc>
     <lastmod>2024-09-22T20:11:03+08:00</lastmod>
@@ -11,47 +32,13 @@
     <loc>https://limincai.github.io/p/markdown-%E8%AF%AD%E6%B3%95/</loc>
     <lastmod>2024-09-22T20:11:03+08:00</lastmod>
   </url><url>
-    <loc>https://limincai.github.io/post/</loc>
-    <lastmod>2024-09-22T20:11:03+08:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/tags/</loc>
-    <lastmod>2024-09-22T20:11:03+08:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/categories/</loc>
-    <lastmod>2020-09-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/p/test-chinese/</loc>
-    <lastmod>2020-09-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/categories/test/</loc>
-    <lastmod>2020-09-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/categories/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2020-09-09T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://limincai.github.io/page/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://limincai.github.io/archives/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://limincai.github.io/p/placeholder-text/</loc>
-    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/tags/tag-with-whitespaces/</loc>
-    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/categories/test-with-whitespaces/</loc>
-    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/tags/text/</loc>
-    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/tags/emoji/</loc>
-    <lastmod>2019-03-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://limincai.github.io/p/emoji-support/</loc>
-    <lastmod>2019-03-05T00:00:00+00:00</lastmod>
+    <loc>https://limincai.github.io/categories/test/</loc>
   </url><url>
     <loc>https://limincai.github.io/%E5%85%B3%E4%BA%8E/</loc>
   </url><url>
