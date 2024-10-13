@@ -287,7 +287,17 @@ name='description' content="Redis 对于 Java 程序员的快速上手使用。"
         </li>
       </ol>
     </li>
-    <li><a href="#高级数据结构">高级数据结构</a></li>
+    <li><a href="#高级数据结构">高级数据结构</a>
+      <ol>
+        <li><a href="#geospatial">Geospatial</a>
+          <ol>
+            <li><a href="#应用场景-5">应用场景</a></li>
+            <li><a href="#基本操作-5">基本操作</a></li>
+            <li><a href="#java-代码测试-5">Java 代码测试</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
   </ol>
 </nav>
         </div>
@@ -1165,7 +1175,114 @@ name='description' content="Redis 对于 Java 程序员的快速上手使用。"
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="高级数据结构">高级数据结构
-</h2>
+</h2><h3 id="geospatial">Geospatial
+</h3><h4 id="应用场景-5">应用场景
+</h4><ul>
+<li>附近搜索：地理位置服务应用（如打车软件、外卖平台）可以利用 Redis 的地理空间索引来快速找到用户附近的司机或餐馆。</li>
+<li>路线规划与距离计算：对于需要进行路径规划或者距离计算的应用程序，如物流配送系统，可以利用<code>GEODIST</code>命令来获取两个地理位置之间的距离。</li>
+<li>基于位置的广告推送：零售业可以利用地理信息向顾客推送附近店铺的促销信息。例如，在商场区域内发送优惠券给进入该区域的顾客。</li>
+</ul>
+<h4 id="基本操作-5">基本操作
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"># 添加一个或多个元素对应的经纬度信息到 GEO 中
+</span></span><span class="line"><span class="cl">GEOADD key longitude1 latitude1 member1 [longitude2 latitude2 member2...]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 返回给定元素的经纬度信息
+</span></span><span class="line"><span class="cl">GEOPOS key member1 [member2...]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 计算两个位置之间的距离
+</span></span><span class="line"><span class="cl">GEODIST key member1 member2 [m<span class="p">|</span>km<span class="p">|</span>ft<span class="p">|</span>mi]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 返回一个多多个位置对象的 geohash 值
+</span></span><span class="line"><span class="cl">GEOHASH key member1 [member2...]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 根据给定的经纬度坐标来获取指定范围内的地理位置集合
+</span></span><span class="line"><span class="cl">GEORADIUS key longitude latitude radius [m<span class="p">|</span>km<span class="p">|</span>ft<span class="p">|</span>mi]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 根据存储在位置集合里面的某个地点获取指定范围内的地理位置集合
+</span></span><span class="line"><span class="cl">GEORADIUSBYMEMBER key member radius [m<span class="p">|</span>km<span class="p">|</span>ft<span class="p">|</span>mi]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="java-代码测试-5">Java 代码测试
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Test</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">testGeo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 添加一个或多个元素对应的经纬度信息到 GEO 中</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForGeo</span><span class="p">().</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;cities&#34;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="n">73</span><span class="p">.</span><span class="na">935242</span><span class="p">,</span><span class="w"> </span><span class="n">40</span><span class="p">.</span><span class="na">73061</span><span class="p">),</span><span class="w"> </span><span class="s">&#34;New York&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForGeo</span><span class="p">().</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;cities&#34;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="n">0</span><span class="p">.</span><span class="na">127758</span><span class="p">,</span><span class="w"> </span><span class="n">51</span><span class="p">.</span><span class="na">507351</span><span class="p">),</span><span class="w"> </span><span class="s">&#34;London&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForGeo</span><span class="p">().</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;cities&#34;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Point</span><span class="p">(</span><span class="n">116</span><span class="p">.</span><span class="na">407526</span><span class="p">,</span><span class="w"> </span><span class="n">39</span><span class="p">.</span><span class="na">90403</span><span class="p">),</span><span class="w"> </span><span class="s">&#34;Beijing&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 返回给定元素的经纬度信息</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="w"> </span><span class="n">position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForGeo</span><span class="p">().</span><span class="na">position</span><span class="p">(</span><span class="s">&#34;cities&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;New York&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;London&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">position</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 计算两个位置之间的距离</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Distance</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForGeo</span><span class="p">().</span><span class="na">distance</span><span class="p">(</span><span class="s">&#34;cities&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;New York&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;London&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">RedisGeoCommands</span><span class="p">.</span><span class="na">DistanceUnit</span><span class="p">.</span><span class="na">KILOMETERS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">distance</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">distance</span><span class="p">.</span><span class="na">getValue</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 返回一个多多个位置对象的 geohash 值</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForGeo</span><span class="p">().</span><span class="na">hash</span><span class="p">(</span><span class="s">&#34;cities&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;New York&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;London&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">hash</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 根据给定的经纬度坐标来获取指定范围内的地理位置集合</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Circle</span><span class="w"> </span><span class="n">circle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Circle</span><span class="p">(</span><span class="o">-</span><span class="n">73</span><span class="p">.</span><span class="na">935242</span><span class="p">,</span><span class="w"> </span><span class="n">40</span><span class="p">.</span><span class="na">73061</span><span class="p">,</span><span class="w"> </span><span class="n">Metrics</span><span class="p">.</span><span class="na">KILOMETERS</span><span class="p">.</span><span class="na">getMultiplier</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">RedisGeoCommands</span><span class="p">.</span><span class="na">GeoRadiusCommandArgs</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RedisGeoCommands</span><span class="p">.</span><span class="na">GeoRadiusCommandArgs</span><span class="p">.</span><span class="na">newGeoRadiusArgs</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">includeDistance</span><span class="p">()</span><span class="w"> </span><span class="c1">//包含距离</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">includeCoordinates</span><span class="p">()</span><span class="w"> </span><span class="c1">//包含坐标</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">sortAscending</span><span class="p">()</span><span class="w"> </span><span class="c1">//升序</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">limit</span><span class="p">(</span><span class="n">50</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">GeoResults</span><span class="o">&lt;</span><span class="n">RedisGeoCommands</span><span class="p">.</span><span class="na">GeoLocation</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">byxy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForGeo</span><span class="p">().</span><span class="na">radius</span><span class="p">(</span><span class="s">&#34;cities&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">circle</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">byxy</span><span class="p">.</span><span class="na">forEach</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">r</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
 </section>
  <footer class="article-footer">
 	
