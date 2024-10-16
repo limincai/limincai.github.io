@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" /><meta
+name='description' content="Redis 在 SpringBoot 项目入解决缓存穿透、缓存击穿和缓存雪崩三种常见问题。"> <title>Redis 解决缓存穿透、缓存击穿和缓存雪崩</title>
+
+<link rel="canonical" href="https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/" />
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Redis 解决缓存穿透、缓存击穿和缓存雪崩">
+<meta property='og:description' content="Redis 在 SpringBoot 项目入解决缓存穿透、缓存击穿和缓存雪崩三种常见问题。">
+<meta property='og:url' content='https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/'>
+<meta property='og:site_name' content='limincai 的博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Redis' /><meta property='article:tag' content='Redis 应用' /><meta property='article:published_time' content='2024-10-13T21:47:45&#43;08:00'/><meta property='article:modified_time' content='2024-10-13T21:47:45&#43;08:00'/><meta property='og:image' content='https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/redis-hcjc-cover.png' />
+<meta name="twitter:title" content="Redis 解决缓存穿透、缓存击穿和缓存雪崩">
+<meta name="twitter:description" content="Redis 在 SpringBoot 项目入解决缓存穿透、缓存击穿和缓存雪崩三种常见问题。"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/redis-hcjc-cover.png' />
+<link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu7047674583865811004.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">limincai 的博客</a></h1>
+            <h2 class="site-description">路漫漫其修远兮</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://space.bilibili.com/297156972?spm_id_from=333.1007.0.0'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bilibili"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" /><path d="M8 3l2 3" /><path d="M16 3l-2 3" /><path d="M9 13v-2" /><path d="M15 11v2" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/limincai'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#缓存穿透">缓存穿透</a>
+      <ol>
+        <li><a href="#解决方案">解决方案</a></li>
+        <li><a href="#解决方案对比">解决方案对比</a></li>
+        <li><a href="#缓存空对象-java-实现">缓存空对象 Java 实现</a></li>
+      </ol>
+    </li>
+    <li><a href="#缓存击穿">缓存击穿</a>
+      <ol>
+        <li><a href="#解决方案-1">解决方案</a></li>
+        <li><a href="#解决方案对比-1">解决方案对比</a></li>
+        <li><a href="#互斥锁-java-实现">互斥锁 Java 实现</a></li>
+        <li><a href="#逻辑过期-java-实现">逻辑过期 Java 实现</a></li>
+      </ol>
+    </li>
+    <li><a href="#缓存雪崩">缓存雪崩</a>
+      <ol>
+        <li><a href="#解决方案-2">解决方案</a></li>
+        <li><a href="#随机过期时间-java-实现">随机过期时间 Java 实现</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+	<header class="article-header">
+        <div class="article-image">
+            <a href="/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/">
+                <img src="/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/redis-hcjc-cover_hu17085443108666971187.png"
+                        srcset="/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/redis-hcjc-cover_hu17085443108666971187.png 800w, /p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/redis-hcjc-cover_hu17306137868054933246.png 1600w"
+                        width="800" 
+                        height="450" 
+                        loading="lazy"
+                        alt="Featured image of post Redis 解决缓存穿透、缓存击穿和缓存雪崩" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/redis/" >
+                Redis
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/">Redis 解决缓存穿透、缓存击穿和缓存雪崩</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Redis 在 SpringBoot 项目入解决缓存穿透、缓存击穿和缓存雪崩三种常见问题。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 13, 2024</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header> <section class="article-content">
+    
+    
+    <h2 id="缓存穿透">缓存穿透
+</h2><p><strong>缓存穿透</strong>：指查询一个不存在的数据，缓存中没有相应的记录，每次请求都会去访问数据库，使数据库负担加大。</p>
+<h3 id="解决方案">解决方案
+</h3><ul>
+<li>缓存空数据，对查询结果进行缓存，即使是不存在的数据，也可以缓存一个标识，以减少对数据库的请求。</li>
+</ul>
+<div align="center">
+  <img src="redis-hcjc-6.png">
+</div>
+<ul>
+<li>使用布隆过滤器，过滤到不存在的请求，避免直接访问数据库。</li>
+</ul>
+<div align="center">
+  <img src="redis-hcjc-7.png">
+</div>
+<h3 id="解决方案对比">解决方案对比
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">解决方案</th>
+          <th style="text-align: center">优点</th>
+          <th style="text-align: center">缺点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">缓存空对象</td>
+          <td style="text-align: center">实现简单，方便维护<br/></td>
+          <td style="text-align: center">额外的内存消耗<br/>可能造成短期的不一致</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">布隆过滤器</td>
+          <td style="text-align: center">内存占用较小，没有多余 key</td>
+          <td style="text-align: center">实现复杂<br/>存在误判可能<br/></td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="缓存空对象-java-实现">缓存空对象 Java 实现
+</h3><p>流程图：</p>
+<div align="center">
+  <img src="redis-hcjc-8.png">
+</div>
+<p>Java 业务代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author limincai
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GoodServiceImpl</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ServiceImpl</span><span class="o">&lt;</span><span class="n">GoodMapper</span><span class="p">,</span><span class="w"> </span><span class="n">Good</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">GoodService</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Resource</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">StringRedisTemplate</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="nf">getGood</span><span class="p">(</span><span class="n">Integer</span><span class="w"> </span><span class="n">goodId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;good:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">goodId</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 1.从 redis 中查询商品缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">goodJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 2.判断是否存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">StrUtil</span><span class="p">.</span><span class="na">isNotBlank</span><span class="p">(</span><span class="n">goodJson</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 存在直接返回</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toBean</span><span class="p">(</span><span class="n">goodJson</span><span class="p">,</span><span class="w"> </span><span class="n">Good</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 3.判断命中的是否是空值</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goodJson</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 是则直接返回空值</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 4.不存在，查询数据库</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Good</span><span class="w"> </span><span class="n">good</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getById</span><span class="p">(</span><span class="n">goodId</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 5.数据库中不存在，则将空值写入 redis 并设置过期时间</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">30</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 6.数据库中存在，则重建缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toJsonStr</span><span class="p">(</span><span class="n">good</span><span class="p">),</span><span class="w"> </span><span class="n">30</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">good</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="缓存击穿">缓存击穿
+</h2><p><strong>缓存击穿</strong>：指某个热点数据在缓存中失效，导致大量请求直接访问数据库。此时，由于瞬间的高并发，可能导致数据库崩溃。</p>
+<img src="redis-hcjc-1.png">
+<h3 id="解决方案-1">解决方案
+</h3><ul>
+<li>使用互斥锁，确保同一时间只有一个请求可以去数据库查询并更新缓存。当缓存未命中时，当前线程获得锁并去查询数据库重新缓存数据。缺点是性能较差，当前线程拿到互斥锁时，其他线程只能等待。</li>
+</ul>
+<div align="center">
+  <img src="redis-hcjc-2.png">
+</div>
+<ul>
+<li>逻辑过期，热点数据永不过期。若当前线程发现数据逻辑时间已过期，就去获得互斥锁，并开启一个新的线程去查询数据库重新建立缓存，并返回已过期的数据。当其他线程获取互斥锁失败时，直接返回过期数据。当缓存重新建立时，此时释放锁，其他线程可以直接命中缓存。</li>
+</ul>
+<div align="center">
+  <img src="redis-hcjc-3.png">
+</div>
+<h3 id="解决方案对比-1">解决方案对比
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">解决方案</th>
+          <th style="text-align: center">优点</th>
+          <th style="text-align: center">缺点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">互斥锁</td>
+          <td style="text-align: center">没有额外内存消耗<br/>保证一致性<br/>实现简单</td>
+          <td style="text-align: center">没有额外内存消耗<br/>可能有死锁风险</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">逻辑过期</td>
+          <td style="text-align: center">线程无需等待</td>
+          <td style="text-align: center">不保证一致性<br/>有额外内存消耗<br/>实现复杂</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="互斥锁-java-实现">互斥锁 Java 实现
+</h3><p>流程图：</p>
+<div align="center">
+  <img src="redis-hcjc-4.png">
+</div>
+<p>Java 业务代码：</p>
+<p>其中 <code>tryLock()</code> 和 <code>unLock()</code> 可以使用 <code>ReentrantLock</code> 对象的 <code>tryLock()</code> 和 <code>unLock()</code> 方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author limincai
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GoodServiceImpl</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ServiceImpl</span><span class="o">&lt;</span><span class="n">GoodMapper</span><span class="p">,</span><span class="w"> </span><span class="n">Good</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">GoodService</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Lock</span><span class="w"> </span><span class="n">lock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReentrantLock</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Resource</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">StringRedisTemplate</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="nf">getGood</span><span class="p">(</span><span class="n">Integer</span><span class="w"> </span><span class="n">goodId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;good:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">goodId</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 1.从 redis 中查询商品缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">goodJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 2.判断是否存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">StrUtil</span><span class="p">.</span><span class="na">isNotBlank</span><span class="p">(</span><span class="n">goodJson</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 如果存在直接返回</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toBean</span><span class="p">(</span><span class="n">goodJson</span><span class="p">,</span><span class="w"> </span><span class="n">Good</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 3.不存在实现缓存重建</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 3.1.获取互斥锁</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Good</span><span class="w"> </span><span class="n">good</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">lockKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;lock:good:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">goodId</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tryLock</span><span class="p">(</span><span class="n">lockKey</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">// 3.2.获取成功，查询数据库更新缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">good</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getById</span><span class="p">(</span><span class="n">goodId</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">// 模拟重建的延时</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="n">200</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="c1">// 3.2.1. 数据库中不存在，在 redis 中存入空值并返回空</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">30</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="c1">// 3.2.2. 数据库中存在数据更新缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toJsonStr</span><span class="p">(</span><span class="n">good</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">// 3.3.获取失败，休眠一段时间重新</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="n">50</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">getGood</span><span class="p">(</span><span class="n">goodId</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">InterruptedException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 4.释放互斥锁</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">unLock</span><span class="p">(</span><span class="n">lockKey</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">good</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 获取锁
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param key redis key
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @return 是否获取成功
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">tryLock</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 当成功设置值时，说明可以获得锁，返回 true，否则返回 false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 给锁设置一个有效期，防止出现死锁</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Boolean</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">setIfAbsent</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;1&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">50</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">BooleanUtil</span><span class="p">.</span><span class="na">isTrue</span><span class="p">(</span><span class="n">flag</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 释放锁
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param key redis key
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">unLock</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="逻辑过期-java-实现">逻辑过期 Java 实现
+</h3><p>流程图：</p>
+<div align="center">
+  <img src="redis-hcjc-5.png">
+</div>
+<p>首先先新建一个对象，里面有一个属性作为过期时间，另外一个属性为数据对象，这样不需要修改原来代码就能让数据对象拥有逻辑过期时间属性。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author limincai
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Getter</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Setter</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RedisData</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 逻辑过期时间
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">expireTime</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 数据对象
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">data</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Java 业务代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author limincai
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GoodServiceImpl</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ServiceImpl</span><span class="o">&lt;</span><span class="n">GoodMapper</span><span class="p">,</span><span class="w"> </span><span class="n">Good</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">GoodService</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 缓存重建线程池
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ExecutorService</span><span class="w"> </span><span class="n">CACHE_REBUILD_EXECUTOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Executors</span><span class="p">.</span><span class="na">newFixedThreadPool</span><span class="p">(</span><span class="n">10</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Resource</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">StringRedisTemplate</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="nf">getGood</span><span class="p">(</span><span class="n">Integer</span><span class="w"> </span><span class="n">goodId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;good:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">goodId</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 1.从 redis 中查询商品缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">goodJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 2.判断是否存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">StrUtil</span><span class="p">.</span><span class="na">isNotBlank</span><span class="p">(</span><span class="n">goodJson</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 如果不存在直接返回空</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 3.存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">RedisData</span><span class="w"> </span><span class="n">redisData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toBean</span><span class="p">(</span><span class="n">goodJson</span><span class="p">,</span><span class="w"> </span><span class="n">RedisData</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Good</span><span class="w"> </span><span class="n">good</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toBean</span><span class="p">((</span><span class="n">JSONObject</span><span class="p">)</span><span class="w"> </span><span class="n">redisData</span><span class="p">.</span><span class="na">getData</span><span class="p">(),</span><span class="w"> </span><span class="n">Good</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 4.判断缓存是否过期</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">redisData</span><span class="p">.</span><span class="na">getExpireTime</span><span class="p">().</span><span class="na">isAfter</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 未过期则直接返回过期数据</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">good</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 5.过期则虚缓存重构</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 5.1.获取互斥锁</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">lockKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;lock:good:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">goodId</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tryLock</span><span class="p">(</span><span class="n">lockKey</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">// 5.2.获取成功，新建一个缓存查询数据库更新缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">CACHE_REBUILD_EXECUTOR</span><span class="p">.</span><span class="na">submit</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">saveGoodToRedis</span><span class="p">(</span><span class="n">goodId</span><span class="p">,</span><span class="w"> </span><span class="n">30L</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">good</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getById</span><span class="p">(</span><span class="n">goodId</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 5.4.释放互斥锁</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">unLock</span><span class="p">(</span><span class="n">lockKey</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 5.5.缓存失败直接返回过期数据</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">good</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 把封装逻辑过期时间的数据对象到 redis
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param goodId        商品 id
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param expireSeconds 过期时间（秒）
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">saveGoodToRedis</span><span class="p">(</span><span class="n">Integer</span><span class="w"> </span><span class="n">goodId</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">expireSeconds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 1.查询店铺数据</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Good</span><span class="w"> </span><span class="n">good</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getById</span><span class="p">(</span><span class="n">goodId</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 2.封装逻辑过期时间</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">RedisData</span><span class="w"> </span><span class="n">redisData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RedisData</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">redisData</span><span class="p">.</span><span class="na">setExpireTime</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">().</span><span class="na">plusSeconds</span><span class="p">(</span><span class="n">expireSeconds</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">redisData</span><span class="p">.</span><span class="na">setData</span><span class="p">(</span><span class="n">good</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 3.写入到 redis</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">set</span><span class="p">(</span><span class="s">&#34;good:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">goodId</span><span class="p">,</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toJsonStr</span><span class="p">(</span><span class="n">redisData</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 获取锁
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param key redis key
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @return 是否获取成功
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">tryLock</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 当成功设置值时，说明可以获得锁，返回 true，否则返回 false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 给锁设置一个有效期，防止出现死锁</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Boolean</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">setIfAbsent</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;1&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">50</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">BooleanUtil</span><span class="p">.</span><span class="na">isTrue</span><span class="p">(</span><span class="n">flag</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * 释放锁
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param key redis key
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">unLock</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w"> 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="缓存雪崩">缓存雪崩
+</h2><p><strong>缓存雪崩</strong>：指多个缓存数据中同一时间过期或者 Redis 服务宕机，导致大量的请求访问数据库，从而造成数据库瞬间负载激增。</p>
+<h3 id="解决方案-2">解决方案
+</h3><ul>
+<li>采用随机过期时间策略，避免多个数据同时过期。</li>
+<li>使用双缓存策略，将数据同时存储在两层缓存中，减少数据库的直接请求。</li>
+<li>利用 Redis 集群提高服务的可用性。</li>
+<li>给缓存业务添加降级限流策略。</li>
+</ul>
+<h3 id="随机过期时间-java-实现">随机过期时间 Java 实现
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author limincai
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GoodServiceImpl</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ServiceImpl</span><span class="o">&lt;</span><span class="n">GoodMapper</span><span class="p">,</span><span class="w"> </span><span class="n">Good</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">GoodService</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Resource</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">StringRedisTemplate</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="nf">getGood</span><span class="p">(</span><span class="n">Integer</span><span class="w"> </span><span class="n">goodId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;good:&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">goodId</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 1.从 redis 中查询商品缓存</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">goodJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 2.判断是否存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">StrUtil</span><span class="p">.</span><span class="na">isNotBlank</span><span class="p">(</span><span class="n">goodJson</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 存在直接返回</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toBean</span><span class="p">(</span><span class="n">goodJson</span><span class="p">,</span><span class="w"> </span><span class="n">Good</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 3.不存在查询数据库</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Good</span><span class="w"> </span><span class="n">good</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getById</span><span class="p">(</span><span class="n">goodId</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 4.数据库中不存在，返回空</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 5.数据库中存在，重建缓存,并给过期时间额外添加随机值防止同时过期</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 生成 5 - 10 的随机数，作为随机的过期时间</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Random</span><span class="w"> </span><span class="n">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Random</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">randomTTL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">((</span><span class="n">10</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">5</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">stringRedisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">().</span><span class="na">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">JSONUtil</span><span class="p">.</span><span class="na">toJsonStr</span><span class="p">(</span><span class="n">good</span><span class="p">),</span><span class="w"> </span><span class="n">30</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">randomTTL</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">good</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+ <footer class="article-footer">
+	
+    <section class="article-tags">
+        
+            <a href="/tags/redis/">Redis</a>
+        
+            <a href="/tags/redis-%E5%BA%94%E7%94%A8/">Redis 应用</a>
+        
+    </section>
+ </footer>
+
+	 <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script> 
+</article>
+
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/redis-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+        
+        
+            <div class="article-image">
+                <img src="/p/redis-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/redis-quick-start-cover.2fb06bdb485dfac53504c96f8ac29727_hu15767239621107498973.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Redis 快速入门"
+                        
+                        data-hash="md5-L7Br20hd&#43;sU1BMlvisKXJw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Redis 快速入门</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+	<section class="copyright">
+		&copy;  2024 limincai
+	</section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
