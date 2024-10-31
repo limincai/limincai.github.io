@@ -7,7 +7,22 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>limincai</copyright>
-        <lastBuildDate>Sun, 13 Oct 2024 21:47:45 +0800</lastBuildDate><atom:link href="https://limincai.github.io/tags/redis-%E5%BA%94%E7%94%A8/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 20 Oct 2024 21:12:22 +0800</lastBuildDate><atom:link href="https://limincai.github.io/tags/redis-%E5%BA%94%E7%94%A8/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Redis 解决数据一致性问题</title>
+        <link>https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</link>
+        <pubDate>Sun, 20 Oct 2024 21:12:22 +0800</pubDate>
+        
+        <guid>https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</guid>
+        <description>&lt;img src="https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/redis-consistency-cover.png" alt="Featured image of post Redis 解决数据一致性问题" /&gt;&lt;h2 id=&#34;先更新缓存再更新数据库&#34;&gt;先更新缓存，再更新数据库
+&lt;/h2&gt;&lt;div align=&#34;center&#34;&gt;
+  &lt;img src=&#34;redis-consistency-1.png&#34;&gt;
+&lt;/div&gt;
+&lt;p&gt;由于网络问题，请求顺序无法保证，可能出现先更新缓存的请求，后更新数据库，而后更新缓存的请求反而更新了数据库，这样就出现了缓存数据为20，数据库数据为10，数据不一致。&lt;/p&gt;
+&lt;h2 id=&#34;先更新数据库再更新缓存&#34;&gt;先更新数据库，再更新缓存
+&lt;/h2&gt;&lt;h2 id=&#34;先删除缓存再更新数据库&#34;&gt;先删除缓存，再更新数据库
+&lt;/h2&gt;</description>
+        </item>
+        <item>
         <title>Redis 解决缓存穿透、缓存击穿和缓存雪崩</title>
         <link>https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/</link>
         <pubDate>Sun, 13 Oct 2024 21:47:45 +0800</pubDate>
