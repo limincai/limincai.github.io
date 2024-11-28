@@ -7,7 +7,37 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>limincai</copyright>
-        <lastBuildDate>Wed, 06 Nov 2024 12:58:46 +0800</lastBuildDate><atom:link href="https://limincai.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 28 Nov 2024 11:09:50 +0800</lastBuildDate><atom:link href="https://limincai.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>关于编程</title>
+        <link>https://limincai.github.io/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/</link>
+        <pubDate>Thu, 28 Nov 2024 11:09:50 +0800</pubDate>
+        
+        <guid>https://limincai.github.io/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/</guid>
+        <description>&lt;img src="https://limincai.github.io/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/about-program-cover.jpg" alt="Featured image of post 关于编程" /&gt;&lt;h2 id=&#34;编程是一个抽象到具体的不断进化&#34;&gt;编程是一个抽象到具体的不断进化
+&lt;/h2&gt;&lt;p&gt;目前我对编程的理解大概有四个层次。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;第一层，学习语言与技术。这是编程的起点，是一个高度抽象的过程，侧重于掌握工具和技术的基础。（&lt;strong&gt;学技术&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;第二层是实际操作项目。这一层面转向具体应用，编程的目标是解决现实中的问题。（&lt;strong&gt;用轮子&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;第三层又回到了抽象，回到抽象。这一层次是对前面问题的共性进行总结，开发通用的解决方案，相当于“造轮子”的过程。（&lt;strong&gt;造轮子&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;第四层为终极一层，终极目标。这是我作为编程爱好者的追求，整合上述三个层次的成果，追求完美的解决方案，涵盖了抽象的理念和集体的协作。&lt;strong&gt;Make it work, make it right, make it fast&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;每一层次都为下一层提供基础，它们彼此相辅相成。&lt;/p&gt;
+&lt;p&gt;代码的实现（具体）始终建立在对抽象的理解和设计上，而抽象与具体又是相互依存、相互促进的。&lt;/p&gt;
+&lt;h2 id=&#34;编程的哲学&#34;&gt;编程的哲学
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;从混沌到秩序&lt;/strong&gt;：编程始于模糊的需求，经过抽象的思考，逐步澄清问题，最终通过具体的实现将理论转化为现实，创造出有实际操作性的成果。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;重复无休止，问题的永恒性&lt;/strong&gt;：编程是一个不断在抽象与具体化之间往返的过程，类似于哲学中对真理的追寻。这种追寻并不是无意义，是对于未知的探索，有着反思性。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;存在论：“创造意义”&lt;/strong&gt;：不仅仅是为了写代码，而是对代码注入思想的价值，赋予代码一种“存在”的意义。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
         <title>RabbitMQ 延迟队列</title>
         <link>https://limincai.github.io/p/rabbitmq-%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</link>
         <pubDate>Wed, 06 Nov 2024 12:58:46 +0800</pubDate>
@@ -3332,9 +3362,7 @@
 &lt;/div&gt;
 &lt;/div&gt;&lt;h2 id=&#34;数学公式&#34;&gt;数学公式
 &lt;/h2&gt;&lt;h3 id=&#34;公式块&#34;&gt;公式块
-&lt;/h3&gt;&lt;p&gt;需要编写数学公式，我们同样需要在特定的块中编写，公式块使用&lt;code&gt;$&lt;/code&gt;美元符表示。多行公式使用连续的两个美元符：
-&lt;/p&gt;
-$$
+&lt;/h3&gt;$$
 我是公式
 $$&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;

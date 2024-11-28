@@ -310,9 +310,7 @@
 &lt;/div&gt;
 &lt;/div&gt;&lt;h2 id=&#34;数学公式&#34;&gt;数学公式
 &lt;/h2&gt;&lt;h3 id=&#34;公式块&#34;&gt;公式块
-&lt;/h3&gt;&lt;p&gt;需要编写数学公式，我们同样需要在特定的块中编写，公式块使用&lt;code&gt;$&lt;/code&gt;美元符表示。多行公式使用连续的两个美元符：
-&lt;/p&gt;
-$$
+&lt;/h3&gt;$$
 我是公式
 $$&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;

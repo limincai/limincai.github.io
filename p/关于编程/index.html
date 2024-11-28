@@ -2,18 +2,18 @@
 <html lang="zh-cn" dir="ltr">
     <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" /><meta
-name='description' content="解决在 Java 中 Redis 与 Mysql 数据库一致性问题。"> <title>Redis 解决数据一致性问题</title>
+name='description' content="作为一名编程爱好者，对于编程的一些思考"> <title>关于编程</title>
 
-<link rel="canonical" href="https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/" />
+<link rel="canonical" href="https://limincai.github.io/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/" />
 
-<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Redis 解决数据一致性问题">
-<meta property='og:description' content="解决在 Java 中 Redis 与 Mysql 数据库一致性问题。">
-<meta property='og:url' content='https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/'>
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="关于编程">
+<meta property='og:description' content="作为一名编程爱好者，对于编程的一些思考">
+<meta property='og:url' content='https://limincai.github.io/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/'>
 <meta property='og:site_name' content='limincai 的博客'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Redis' /><meta property='article:published_time' content='2024-10-20T21:12:22&#43;08:00'/><meta property='article:modified_time' content='2024-10-20T21:12:22&#43;08:00'/><meta property='og:image' content='https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/redis-consistency-cover.png' />
-<meta name="twitter:title" content="Redis 解决数据一致性问题">
-<meta name="twitter:description" content="解决在 Java 中 Redis 与 Mysql 数据库一致性问题。"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://limincai.github.io/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/redis-consistency-cover.png' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-11-28T11:09:50&#43;08:00'/><meta property='article:modified_time' content='2024-11-28T11:09:50&#43;08:00'/><meta property='og:image' content='https://limincai.github.io/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/about-program-cover.jpg' />
+<meta name="twitter:title" content="关于编程">
+<meta name="twitter:description" content="作为一名编程爱好者，对于编程的一些思考"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://limincai.github.io/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/about-program-cover.jpg' />
 <link rel="shortcut icon" href="/favicon.ico" />
 
     </head>
@@ -228,9 +228,8 @@ name='description' content="解决在 Java 中 Redis 与 Mysql 数据库一致�
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#先更新缓存再更新数据库">先更新缓存，再更新数据库</a></li>
-    <li><a href="#先更新数据库再更新缓存">先更新数据库，再更新缓存</a></li>
-    <li><a href="#先删除缓存再更新数据库">先删除缓存，再更新数据库</a></li>
+    <li><a href="#编程是一个抽象到具体的不断进化">编程是一个抽象到具体的不断进化</a></li>
+    <li><a href="#编程的哲学">编程的哲学</a></li>
   </ol>
 </nav>
         </div>
@@ -245,13 +244,13 @@ name='description' content="解决在 Java 中 Redis 与 Mysql 数据库一致�
     <article class="has-image main-article">
 	<header class="article-header">
         <div class="article-image">
-            <a href="/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/">
-                <img src="/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/redis-consistency-cover_hu9367360695229309951.png"
-                        srcset="/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/redis-consistency-cover_hu9367360695229309951.png 800w, /p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/redis-consistency-cover_hu5401364835624818530.png 1600w"
+            <a href="/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/">
+                <img src="/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/about-program-cover_hu15671539297958714639.jpg"
+                        srcset="/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/about-program-cover_hu15671539297958714639.jpg 800w, /p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/about-program-cover_hu4031340455247024110.jpg 1600w"
                         width="800" 
-                        height="384" 
+                        height="450" 
                         loading="lazy"
-                        alt="Featured image of post Redis 解决数据一致性问题" />
+                        alt="Featured image of post 关于编程" />
                 
             </a>
         </div>
@@ -259,23 +258,15 @@ name='description' content="解决在 Java 中 Redis 与 Mysql 数据库一致�
 
     <div class="article-details">
     
-    <header class="article-category">
-        
-            <a href="/categories/redis/" >
-                Redis
-            </a>
-        
-    </header>
-    
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/redis-%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/">Redis 解决数据一致性问题</a>
+            <a href="/p/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B/">关于编程</a>
         </h2>
     
         
         <h3 class="article-subtitle">
-            解决在 Java 中 Redis 与 Mysql 数据库一致性问题。
+            作为一名编程爱好者，对于编程的一些思考
         </h3>
         
     </div>
@@ -296,7 +287,7 @@ name='description' content="解决在 Java 中 Redis 与 Mysql 数据库一致�
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">Oct 20, 2024</time>
+                <time class="article-time--published">Nov 28, 2024</time>
             </div>
         
 
@@ -310,23 +301,32 @@ name='description' content="解决在 Java 中 Redis 与 Mysql 数据库一致�
 </header> <section class="article-content">
     
     
-    <h2 id="先更新缓存再更新数据库">先更新缓存，再更新数据库
-</h2><div align="center">
-  <img src="redis-consistency-1.png">
-</div>
-<p>由于网络问题，请求顺序无法保证，可能出现先更新缓存的请求，后更新数据库，而后更新缓存的请求反而更新了数据库，这样就出现了缓存数据为20，数据库数据为10，数据不一致。</p>
-<h2 id="先更新数据库再更新缓存">先更新数据库，再更新缓存
-</h2><h2 id="先删除缓存再更新数据库">先删除缓存，再更新数据库
-</h2>
+    <h2 id="编程是一个抽象到具体的不断进化">编程是一个抽象到具体的不断进化
+</h2><p>目前我对编程的理解大概有四个层次。</p>
+<ol>
+<li>第一层，学习语言与技术。这是编程的起点，是一个高度抽象的过程，侧重于掌握工具和技术的基础。（<strong>学技术</strong>）</li>
+<li>第二层是实际操作项目。这一层面转向具体应用，编程的目标是解决现实中的问题。（<strong>用轮子</strong>）</li>
+<li>第三层又回到了抽象，回到抽象。这一层次是对前面问题的共性进行总结，开发通用的解决方案，相当于“造轮子”的过程。（<strong>造轮子</strong>）</li>
+<li>第四层为终极一层，终极目标。这是我作为编程爱好者的追求，整合上述三个层次的成果，追求完美的解决方案，涵盖了抽象的理念和集体的协作。<strong>Make it work, make it right, make it fast</strong>。</li>
+</ol>
+<p>每一层次都为下一层提供基础，它们彼此相辅相成。</p>
+<p>代码的实现（具体）始终建立在对抽象的理解和设计上，而抽象与具体又是相互依存、相互促进的。</p>
+<h2 id="编程的哲学">编程的哲学
+</h2><ul>
+<li>
+<p><strong>从混沌到秩序</strong>：编程始于模糊的需求，经过抽象的思考，逐步澄清问题，最终通过具体的实现将理论转化为现实，创造出有实际操作性的成果。</p>
+</li>
+<li>
+<p><strong>重复无休止，问题的永恒性</strong>：编程是一个不断在抽象与具体化之间往返的过程，类似于哲学中对真理的追寻。这种追寻并不是无意义，是对于未知的探索，有着反思性。</p>
+</li>
+<li>
+<p><strong>存在论：“创造意义”</strong>：不仅仅是为了写代码，而是对代码注入思想的价值，赋予代码一种“存在”的意义。</p>
+</li>
+</ul>
+
 </section>
  <footer class="article-footer">
-	
-    <section class="article-tags">
-        
-            <a href="/tags/redis/">Redis</a>
-        
-    </section>
- </footer>
+	 </footer>
 
 	 <link 
                 rel="stylesheet" 
@@ -357,63 +357,6 @@ name='description' content="解决在 Java 中 Redis 与 Mysql 数据库一致�
     
 
     
-
-<aside class="related-content--wrapper">
-    <h2 class="section-title">相关文章</h2>
-    <div class="related-content">
-        <div class="flex article-list--tile">
-            
-                
-<article class="has-image">
-    <a href="/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/">
-        
-        
-            <div class="article-image">
-                <img src="/p/redis-%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/redis-hcjc-cover.920f4f740a29269ffb2e0ddc55c05ab3_hu2596315770668554721.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Redis 解决缓存穿透、缓存击穿和缓存雪崩"
-                        
-                        data-hash="md5-kg9PdAopJp/7Lg3cVcBasw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Redis 解决缓存穿透、缓存击穿和缓存雪崩</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/redis-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
-        
-        
-            <div class="article-image">
-                <img src="/p/redis-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/redis-quick-start-cover.2fb06bdb485dfac53504c96f8ac29727_hu15767239621107498973.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Redis 快速入门"
-                        
-                        data-hash="md5-L7Br20hd&#43;sU1BMlvisKXJw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Redis 快速入门</h2>
-        </div>
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-</aside>
 
      
     
